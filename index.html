@@ -264,13 +264,13 @@
     <a class="action-link" href="https://arxiv.org/abs/2607.06772" target="_blank"><i class="ai ai-arxiv"></i> Paper</a>
     <a class="action-link" href="https://github.com/xiaol827/ELO" target="_blank"><i class="bi bi-github"></i> Code (JAX)</a>
     <a class="action-link" href="https://github.com/Belilovsky-Lab/pylo" target="_blank"><i class="bi bi-github"></i> Code (PyTorch)</a>
-    <a class="action-link" href="#" target="_blank"><i class="bi bi-twitter-x"></i> X Thread</a>
+    <!-- <a class="action-link" href="#" target="_blank"><i class="bi bi-twitter-x"></i> X Thread</a> -->
   </div>
 </header>
 
 <!-- TL;DR -->
 <div class="wrap tldr">
-  <p class="prose"><strong>TL;DR:</strong> We introduce ELO, an efficient long-horizon meta-training algorithm for learned optimization that reallocates redundant compute to difficult long regimes and improves downstream optimization performance.</p>
+  <p class="prose"><strong>TL;DR:</strong> We introduce ELO, an efficient long-horizon meta-training algorithm for learned optimization.</p>
 </div>
 
 <!-- Abstract -->
@@ -337,7 +337,7 @@
       <figcaption>Meta evaluation loss on ImageNet-1K at resolution 32x32, using a three-layer MLP with width 128. Each optimizer is evaluated for 10K inner steps with batch size 4096.</figcaption>
     </figure>
 
-    <h3>Out-of-Distribution Generalization</h3>
+    <h3>Can ELO generalize to out-of-Distribution tasks?</h3>
     <p class="prose">Meta-trained only on 4 tiny vision-MLP tasks, ELO-LOs transfer far outside their meta-training distribution, with ELO-Celo2 outperforming other learned baselines and AdamW across FineWeb pretraining and vision classification tasks, and remaining competitive with Muon on GPT-2 (124M/350M) language modeling.</p>
     <figure>
       <img class="half" src="assets/images/meta_train_eff_with_lm_lm.png" alt="GPT-2 language modeling validation loss over training tokens">
@@ -380,7 +380,7 @@
   <!-- Usage -->
   <section class="sec" id="usage">
     <div class="wrap">
-    <h2>Usage in PyTorch</h2>
+    <h2>How to use ELO-trained LOs in PyTorch</h2>
     <p class="prose">ELO optimizers ship in <a href="https://github.com/Belilovsky-Lab/pylo">PyLO</a> with CUDA-accelerated kernels. Install from source:</p>
 <pre><code>git clone https://github.com/Belilovsky-Lab/pylo
 cd pylo
@@ -430,7 +430,7 @@ for step in range(num_steps):
   <div>&copy; 2026 Xiaolong Huang et al.</div>
   <div class="social">
     <a href="https://github.com/xiaol827/ELO" aria-label="Code (JAX)"><i class="bi bi-github"></i></a>
-    <a href="#" aria-label="X Thread"><i class="bi bi-twitter-x"></i></a>
+    <!-- <a href="#" aria-label="X Thread"><i class="bi bi-twitter-x"></i></a> -->
   </div>
 </footer>
 
