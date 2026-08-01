@@ -338,7 +338,7 @@
     </figure>
 
     <h3>Can ELO generalize to out-of-Distribution tasks?</h3>
-    <p class="prose">Meta-trained only on 4 tiny vision-MLP tasks, ELO-LOs transfer far outside their meta-training distribution, with ELO-Celo2 outperforming other learned baselines and AdamW across FineWeb pretraining and vision classification tasks, and remaining competitive with Muon on GPT-2 (124M/350M) language modeling.</p>
+    <p class="prose">Meta-trained only on 4 tiny vision-MLP tasks, we observe that ELO-LOs transfer far outside their meta-training distribution, with ELO-Celo2 outperforming other learned baselines and AdamW across FineWeb pretraining and vision classification tasks, and remaining competitive with Muon on GPT-2 (124M/350M) language modeling.</p>
     <figure>
       <img class="half" src="assets/images/meta_train_eff_with_lm_lm.png" alt="GPT-2 language modeling validation loss over training tokens">
       <figcaption>GPT-2 (350M) language-modeling validation loss on FineWeb.</figcaption>
@@ -380,7 +380,7 @@
   <!-- Usage -->
   <section class="sec" id="usage">
     <div class="wrap">
-    <h2>How to use ELO-trained LOs in PyTorch</h2>
+    <h2>How to use ELO-trained LOs in PyTorch?</h2>
     <p class="prose">ELO optimizers ship in <a href="https://github.com/Belilovsky-Lab/pylo">PyLO</a> with CUDA-accelerated kernels. Install from source:</p>
 <pre><code>git clone https://github.com/Belilovsky-Lab/pylo
 cd pylo
