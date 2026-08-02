@@ -337,7 +337,7 @@
       <figcaption>Meta evaluation loss on ImageNet-1K at resolution 32x32, using a three-layer MLP with width 128. Each optimizer is evaluated for 10K inner steps with batch size 4096.</figcaption>
     </figure>
 
-    <h3>Can ELO generalize to out-of-Distribution tasks?</h3>
+    <h3>Can ELO-LOs generalize to out-of-Distribution tasks?</h3>
     <p class="prose">Meta-trained only on 4 tiny vision-MLP tasks, we observe that ELO-LOs transfer far outside their meta-training distribution, with ELO-Celo2 outperforming other learned baselines and AdamW across FineWeb pretraining and vision classification tasks, and remaining competitive with Muon on GPT-2 (124M/350M) language modeling.</p>
     <figure>
       <img class="half" src="assets/images/meta_train_eff_with_lm_lm.png" alt="GPT-2 language modeling validation loss over training tokens">
