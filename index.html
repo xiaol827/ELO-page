@@ -303,7 +303,7 @@
     <h2>Key Features</h2>
     <div class="features">
       <div class="feature-card">
-        <h4>Failure-aware resume buffer</h4>
+        <h4>Resume buffer</h4>
         <p>Reallocates redundant meta-training compute toward longer failure regimes, scaling learned-optimizer meta-training to long inner problems.</p>
       </div>
       <div class="feature-card">
@@ -312,7 +312,7 @@
       </div>
       <div class="feature-card">
         <h4>Outperforms hand-designed optimizers</h4>
-        <p>ELO-Celo2 outperforms well-tuned AdamW across all benchmarks and remains competitive with Muon on language modeling.</p>
+        <p>ELO-Celo2 outperforms well-tuned AdamW across all benchmarks, and outperforms Muon on small language modeling tasks.</p>
       </div>
       <div class="feature-card">
         <h4>Cheap to meta-train</h4>
@@ -321,7 +321,7 @@
     </div>
     <figure>
       <img src="assets/images/elo_overview.png" alt="Overview of ELO: resume buffer and progressive expert supervision">
-      <!-- <figcaption>Algorithm 1 &mdash; Efficient Long-hOrizon (ELO) learning. A failure-aware resume buffer recycles redundant early-unroll compute toward longer failure regimes, while decoupled progressive expert guidance stabilizes meta-training via separate direction and magnitude supervision.</figcaption> -->
+      <figcaption>Overview of ELO. Left: under the same compute budget, the resume buffer restarts unrolls from stored states instead of random initialization, shifting compute from easy early stages to failure-prone later regions. Right: progressive expert supervision moves from imitating an expert optimizer to pure task-loss exploitation, stabilizing meta-training throughout.</figcaption>
     </figure>
     </div>
   </section>
@@ -332,7 +332,7 @@
     <h2>Experiments</h2>
 
     <h3>ELO-LOs generalize beyond their meta-training distribution</h3>
-    <p class="prose">Meta-trained only on four tiny 8&times;8 image classification tasks with a one-layer MLP, ELO-LOs transfer to vision and language pretraining tasks with up to 1.3B parameters. ELO-Celo2 outperforms well-tuned AdamW across all tasks and even surpasses Muon on GPT-2 (30M and 124M), while Muon remains best on GPT-3 (1.3B).</p>
+    <p class="prose">Meta-trained only on four tiny 8&times;8 image classification tasks with a one-layer MLP, ELO-LOs generalize to vision and language pretraining tasks with up to 1.3B parameters. ELO-Celo2 outperforms well-tuned AdamW across all tasks and even surpasses Muon on GPT-2 (30M and 124M), while Muon remains best on GPT-3 (1.3B).</p>
     <figure>
       <img src="assets/images/lm_scaling.png" alt="Validation loss of GPT-2 (30M, 124M) and GPT-3 (1.3B) pretraining on FineWeb">
       <figcaption>Validation loss of GPT pretraining on FineWeb. GPT-2 (30M/124M) is trained for 0.6B/2.5B tokens, and GPT-3 (1.3B) for ~10B tokens.</figcaption>
