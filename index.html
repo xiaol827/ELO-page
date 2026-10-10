@@ -311,8 +311,8 @@
         <p>Enforces decoupled progressive expert supervision, providing stable meta-learning signals that additionally lead to generalizable LOs.</p>
       </div>
       <div class="feature-card">
-        <h4>Outperforms hand-designed optimizers</h4>
-        <p>ELO-Celo2 outperforms well-tuned AdamW across all benchmarks, and outperforms Muon on small language modeling tasks.</p>
+        <h4>Consistent downstream gains</h4>
+        <p>ELO-LOs substantially outperform their base LOs.</p>
       </div>
       <div class="feature-card">
         <h4>Cheap to meta-train</h4>
@@ -321,7 +321,7 @@
     </div>
     <figure>
       <img src="assets/images/elo_overview.png" alt="Overview of ELO: resume buffer and progressive expert supervision">
-      <figcaption>Overview of ELO. Left: under the same compute budget, the resume buffer restarts unrolls from stored states instead of random initialization, shifting compute from easy early stages to failure-prone later regions. Right: progressive expert supervision moves from imitating an expert optimizer to pure task-loss exploitation, stabilizing meta-training throughout.</figcaption>
+      <figcaption>Overview of ELO. Left: under the same compute budget, the resume buffer restarts unrolls from stored states instead of random initialization, shifting compute from easy early stages to failure-prone later regions. Right: progressive expert supervision moves from imitating an expert optimizer to pure task-loss exploitation, stabilizing meta-training throughout and encouraging the learning of superior update rules.</figcaption>
     </figure>
     </div>
   </section>
