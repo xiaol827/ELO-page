@@ -191,6 +191,7 @@
     tbody tr.row-sep td { border-top: 1px solid var(--border); }
     tbody tr:last-child td { background: var(--card-bg); }
     td sub { font-size: 0.7em; color: var(--fg-muted); }
+    td .std { font-size: 0.75em; color: var(--fg-muted); margin-left: 1px; }
 
     /* Code blocks */
     pre {
@@ -281,7 +282,7 @@
       Learned optimization aims to improve upon hand-designed optimizers (e.g., Adam and Muon) by meta-learning small neural network optimizers over a distribution of tasks. While recent work has greatly advanced the architectural design and inductive biases of learned optimizers (LOs), their meta-training remains biased toward short-unroll learning on particular tasks, resulting in redundant computation and leaving LOs often unable to compete with hand-designed optimizers. We introduce Efficient Long-hOrizon (ELO) learning, an efficient meta-training algorithm that (1) <strong>reallocates wasted meta-training compute to longer failure regimes</strong>, achieving efficient long-horizon learning, and (2) <strong>enforces decoupled progressive expert supervision</strong>, providing stable meta-learning signals that additionally improve the generalization of LOs.
     </p>
     <p class="prose">
-      Our empirical study evaluates ELO for meta-training both element-wise and matrix-based LOs. Across downstream language modeling (GPT-2-124M/350M on FineWeb) and image classification (ViT-B/16, ResNet-50 on ImageNet-1K) tasks, ELO substantially improves the long-unroll performance and out-of-distribution generalization of the base LOs. In particular, ELO-Celo2 consistently <strong>outperforms well-tuned AdamW</strong> across all evaluated tasks, while <strong>remaining competitive with Muon</strong> on language modeling. <em>Notably, all ELO baselines require less than 7 H100 GPU-hours for meta-training.</em>
+      Our empirical study evaluates ELO for meta-training both element-wise and matrix-based LOs. Across downstream language modeling (GPT-2 and GPT-3 on FineWeb) and image classification (ViT-B/16, ResNet-50 on ImageNet-1K) tasks, ELO substantially improves the long-unroll performance and out-of-distribution generalization of the base LOs. In particular, ELO-Celo2 <strong>outperforms well-tuned AdamW and Muon</strong> on GPT-2 (30M and 124M) language pretraining. <em>Notably, all ELO baselines require less than 7 H100 GPU-hours for meta-training.</em>
     </p>
   </div>
 </section>
@@ -306,7 +307,7 @@
         <p>Reallocates redundant meta-training compute toward longer failure regimes, scaling learned-optimizer meta-training to long inner problems.</p>
       </div>
       <div class="feature-card">
-        <h4>Progressive teacher forcing</h4>
+        <h4>Progressive expert supervision</h4>
         <p>Enforces decoupled progressive expert supervision, providing stable meta-learning signals that additionally lead to generalizable LOs.</p>
       </div>
       <div class="feature-card">
@@ -319,7 +320,7 @@
       </div>
     </div>
     <figure>
-      <img src="assets/images/method.png" alt="ELO algorithm">
+      <img src="assets/images/elo_overview.png" alt="Overview of ELO: resume buffer and progressive expert supervision">
       <!-- <figcaption>Algorithm 1 &mdash; Efficient Long-hOrizon (ELO) learning. A failure-aware resume buffer recycles redundant early-unroll compute toward longer failure regimes, while decoupled progressive expert guidance stabilizes meta-training via separate direction and magnitude supervision.</figcaption> -->
     </figure>
     </div>
@@ -330,22 +331,11 @@
     <div class="wrap">
     <h2>Experiments</h2>
 
-    <h3>Meta-Training Efficiency</h3>
-    <p class="prose">Given a fixed compute budget, ELO improves meta-training convergence, especially at unroll lengths beyond the meta-training inner horizon.</p>
+    <h3>ELO-LOs generalize beyond their meta-training distribution</h3>
+    <p class="prose">Meta-trained only on four tiny 8&times;8 image classification tasks with a one-layer MLP, ELO-LOs transfer to vision and language pretraining tasks with up to 1.3B parameters. ELO-Celo2 outperforms well-tuned AdamW across all tasks and even surpasses Muon on GPT-2 (30M and 124M), while Muon remains best on GPT-3 (1.3B).</p>
     <figure>
-      <img class="half" src="assets/images/meta_train_eff_with_lm_eff.png" alt="ELO meta-training efficiency">
-      <figcaption>Meta evaluation loss on ImageNet-1K at resolution 32x32, using a three-layer MLP with width 128. Each optimizer is evaluated for 10K inner steps with batch size 4096.</figcaption>
-    </figure>
-
-    <h3>Can ELO-LOs generalize to out-of-Distribution tasks?</h3>
-    <p class="prose">Meta-trained only on 4 tiny vision-MLP tasks, we observe that ELO-LOs transfer far outside their meta-training distribution, with ELO-Celo2 outperforming other learned baselines and AdamW across FineWeb pretraining and vision classification tasks, and remaining competitive with Muon on GPT-2 (124M/350M) language modeling.</p>
-    <figure>
-      <img class="half" src="assets/images/meta_train_eff_with_lm_lm.png" alt="GPT-2 language modeling validation loss over training tokens">
-      <figcaption>GPT-2 (350M) language-modeling validation loss on FineWeb.</figcaption>
-    </figure>
-    <figure>
-      <img src="assets/images/lm_curves.png" alt="Element-wise and matrix-based optimizer comparison and best validation loss">
-      <figcaption>GPT-2 (124M) language-modeling validation loss on FineWeb.</figcaption>
+      <img src="assets/images/lm_scaling.png" alt="Validation loss of GPT-2 (30M, 124M) and GPT-3 (1.3B) pretraining on FineWeb">
+      <figcaption>Validation loss of GPT pretraining on FineWeb. GPT-2 (30M/124M) is trained for 0.6B/2.5B tokens, and GPT-3 (1.3B) for ~10B tokens.</figcaption>
     </figure>
 
     <p class="prose">Evaluation on ImageNet Benchmarks</p>
@@ -364,16 +354,16 @@
           </tr>
         </thead>
         <tbody>
-          <tr><td>AdamW</td><td class="group-sep">75.88</td><td>82.19</td><td>63.40</td><td class="group-sep">74.16</td><td>80.87</td><td>61.39</td><td class="group-sep">72.98</td></tr>
-          <tr><td>small_fc</td><td class="group-sep">65.36</td><td>73.70</td><td>53.43</td><td class="group-sep">31.77</td><td>36.70</td><td>25.57</td><td class="group-sep">47.75</td></tr>
-          <tr><td>CL-small_fc</td><td class="group-sep">72.25</td><td>79.53</td><td>59.93</td><td class="group-sep">67.46</td><td>74.74</td><td>54.94</td><td class="group-sep">68.14</td></tr>
-          <tr><td>Celo2</td><td class="group-sep">74.04</td><td>80.91</td><td>61.93</td><td class="group-sep">74.97</td><td>81.10</td><td>62.02</td><td class="group-sep">72.50</td></tr>
-          <tr class="row-sep"><td>ELO-small_fc <sub>(Ours)</sub></td><td class="group-sep">73.92</td><td>81.00</td><td>62.11</td><td class="group-sep">75.18</td><td>81.70</td><td>61.98</td><td class="group-sep">72.65</td></tr>
-          <tr><td>ELO-Celo2 <sub>(Ours)</sub></td><td class="group-sep"><strong>76.29</strong></td><td><strong>82.93</strong></td><td><strong>64.29</strong></td><td class="group-sep"><strong>76.33</strong></td><td><strong>82.21</strong></td><td><strong>63.10</strong></td><td class="group-sep"><strong>74.19</strong></td></tr>
+          <tr><td>AdamW</td><td class="group-sep">75.81<span class="std">&plusmn;0.07</span></td><td>82.17<span class="std">&plusmn;0.02</span></td><td>63.39<span class="std">&plusmn;0.15</span></td><td class="group-sep">74.03<span class="std">&plusmn;0.11</span></td><td>80.72<span class="std">&plusmn;0.18</span></td><td>61.30<span class="std">&plusmn;0.27</span></td><td class="group-sep">72.90</td></tr>
+          <tr><td>small_fc</td><td class="group-sep">65.31<span class="std">&plusmn;0.10</span></td><td>73.66<span class="std">&plusmn;0.03</span></td><td>53.51<span class="std">&plusmn;0.11</span></td><td class="group-sep">32.10<span class="std">&plusmn;0.94</span></td><td>37.09<span class="std">&plusmn;1.10</span></td><td>25.69<span class="std">&plusmn;0.88</span></td><td class="group-sep">47.89</td></tr>
+          <tr><td>CL-small_fc</td><td class="group-sep">71.91<span class="std">&plusmn;0.30</span></td><td>79.23<span class="std">&plusmn;0.26</span></td><td>59.58<span class="std">&plusmn;0.30</span></td><td class="group-sep">67.65<span class="std">&plusmn;0.22</span></td><td>74.88<span class="std">&plusmn;0.16</span></td><td>54.73<span class="std">&plusmn;0.27</span></td><td class="group-sep">68.00</td></tr>
+          <tr><td>Celo2</td><td class="group-sep">75.76<span class="std">&plusmn;0.11</span></td><td>82.34<span class="std">&plusmn;0.07</span></td><td>63.39<span class="std">&plusmn;0.27</span></td><td class="group-sep">75.86<span class="std">&plusmn;0.05</span></td><td>81.74<span class="std">&plusmn;0.05</span></td><td>62.76<span class="std">&plusmn;0.09</span></td><td class="group-sep">73.64</td></tr>
+          <tr class="row-sep"><td>ELO-small_fc <sub>(Ours)</sub></td><td class="group-sep">74.08<span class="std">&plusmn;0.16</span></td><td>81.13<span class="std">&plusmn;0.12</span></td><td>62.10<span class="std">&plusmn;0.30</span></td><td class="group-sep">75.15<span class="std">&plusmn;0.07</span></td><td>81.69<span class="std">&plusmn;0.05</span></td><td>62.08<span class="std">&plusmn;0.10</span></td><td class="group-sep">72.70</td></tr>
+          <tr><td>ELO-Celo2 <sub>(Ours)</sub></td><td class="group-sep"><strong>76.11</strong><span class="std">&plusmn;0.09</span></td><td><strong>82.70</strong><span class="std">&plusmn;0.02</span></td><td><strong>64.03</strong><span class="std">&plusmn;0.39</span></td><td class="group-sep"><strong>76.42</strong><span class="std">&plusmn;0.28</span></td><td><strong>82.26</strong><span class="std">&plusmn;0.31</span></td><td><strong>63.89</strong><span class="std">&plusmn;0.32</span></td><td class="group-sep"><strong>74.24</strong></td></tr>
         </tbody>
       </table>
     </div>
-    <p class="prose" style="font-size:1rem;color:var(--fg-muted);font-style:italic;">Best top1-validation accuracy on ImageNet-1K validation, ImageNet-ReaL, and ImageNet-V2 for ResNet-50 and ViT-B/16 trained from scratch. Each method is trained on ImageNet-1K at 224x224 resolution for 50K steps with batch size 2048. The best value in each column is in <strong>bold</strong>.</p>
+    <p class="prose" style="font-size:1rem;color:var(--fg-muted);font-style:italic;">Best top1-validation accuracy on ImageNet-1K validation, ImageNet-ReaL, and ImageNet-V2 for ResNet-50 and ViT-B/16 trained from scratch, mean &plusmn; std over 3 seeds. Each method is trained on ImageNet-1K at 224x224 resolution for 50K steps with batch size 2048. The best value in each column is in <strong>bold</strong>.</p>
     </div>
   </section>
 
